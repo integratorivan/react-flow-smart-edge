@@ -28,7 +28,7 @@
 		"src"
 	],
 	"scripts": {
-		"build": "yarn build-component",
+		"build": "rm -rf dist && yarn build-component",
 		"build-component": "dts build",
 		"build-storybook": "storybook build",
 		"check-types": "tsc --noEmit",
@@ -39,7 +39,7 @@
 		"lint": "dts lint src",
 		"lint-fix": "dts lint src --fix",
 		"predeploy": "yarn build",
-		"prepare": "yarn build",
+		"prepare": "dts build",
 		"start": "dts watch",
 		"storybook": "storybook dev -p 6006 --ci",
 		"test": "yarn check-types && yarn lint && yarn test-storybook-ci",
