@@ -20,15 +20,22 @@
 	"license": "MIT",
 	"author": "Tiso Alvarez Puccinelli",
 	"type": "module",
-	"main": "dist/index.js",
-	"module": "dist/react-flow-smart-edge.esm.js",
-	"typings": "dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		}
+	},
 	"files": [
 		"dist",
 		"src"
 	],
 	"scripts": {
-		"build": "yarn build-component",
+		"build": "tsup src/index.ts --format esm,cjs --dts",
 		"build-component": "dts build",
 		"build-storybook": "storybook build",
 		"check-types": "tsc --noEmit",
