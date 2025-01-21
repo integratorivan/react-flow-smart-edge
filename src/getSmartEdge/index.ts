@@ -6,11 +6,7 @@ import {
 	svgDrawSmoothLinePath,
 	toInteger
 } from '../functions'
-import type {
-	PointInfo,
-	PathFindingFunction,
-	SVGDrawFunction
-} from '../functions'
+import type { PointInfo, PathFindingFunction } from '../functions'
 import type { Node, EdgeProps } from '@xyflow/react'
 
 export type EdgeParams = Pick<
@@ -22,6 +18,12 @@ export type EdgeParams = Pick<
 	| 'sourcePosition'
 	| 'targetPosition'
 >
+
+export type SVGDrawFunction = (
+	source: { x: number; y: number },
+	target: { x: number; y: number },
+	path: number[][]
+) => string
 
 export type GetSmartEdgeOptions = {
 	gridRatio?: number
@@ -115,7 +117,11 @@ export const getSmartEdge = ({
 		})
 
 		// Finally, we can use the graph path to draw the edge
-		const svgPathString = drawEdge(source, target, graphPath)
+		const svgPathString = drawEdge(
+			{ x: source.x, y: source.y },
+			{ x: target.x, y: target.y },
+			graphPath
+		)
 
 		// Compute the edge's middle point using the full path, so users can use
 		// it to position their custom labels
