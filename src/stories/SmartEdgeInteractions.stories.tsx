@@ -4,7 +4,7 @@ import { GraphWrapper } from './GraphWrapper'
 import { SimulateDragAndDrop, wait } from './SimulateDragAndDrop'
 import { SmartBezier, SmartStraight, SmartStep } from './SmartEdge.stories'
 import type { Meta, Story } from '@storybook/react'
-import type { ReactFlowProps } from 'reactflow'
+import type { @xyflow / reactProps } from '@xyflow/react'
 
 export default {
 	title: 'Interactions',
@@ -16,7 +16,7 @@ export default {
 	}
 } as Meta
 
-const Template: Story<ReactFlowProps> = (args) => <GraphWrapper {...args} />
+const Template: Story<@xyflow/reactProps> = (args) => <GraphWrapper {...args} / >
 
 export const SmartBezierInteraction = Template.bind({})
 SmartBezierInteraction.args = SmartBezier.args

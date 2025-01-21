@@ -9,14 +9,14 @@ import {
 } from './DummyData'
 import { GraphWrapper } from './GraphWrapper'
 import type { Meta, Story } from '@storybook/react'
-import type { ReactFlowProps } from 'reactflow'
+import type { @xyflow / reactProps } from '@xyflow/react'
 
 export default {
 	title: 'Smart Edge',
 	component: GraphWrapper
 } as Meta
 
-const Template: Story<ReactFlowProps> = (args) => <GraphWrapper {...args} />
+const Template: Story<@xyflow/reactProps> = (args) => <GraphWrapper {...args} / >
 
 export const SmartBezier = Template.bind({})
 SmartBezier.args = {

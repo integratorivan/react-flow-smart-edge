@@ -1,7 +1,7 @@
-import { MarkerType } from 'reactflow'
+import { MarkerType } from '@xyflow/react'
 import { SmartBezierEdge, SmartStraightEdge, SmartStepEdge } from '../index'
 import { SmartEdgeCustomLabel } from './CustomLabel'
-import type { Node, Edge } from 'reactflow'
+import type { Node, Edge } from '@xyflow/react'
 
 const markerEndType = MarkerType.Arrow
 

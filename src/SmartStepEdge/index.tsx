@@ -1,12 +1,12 @@
+import { useNodes, StepEdge } from '@xyflow/react'
 import React from 'react'
-import { useNodes, StepEdge } from 'reactflow'
 import { SmartEdge } from '../SmartEdge'
 import {
 	svgDrawStraightLinePath,
 	pathfindingJumpPointNoDiagonal
 } from '../functions'
 import type { SmartEdgeOptions } from '../SmartEdge'
-import type { EdgeProps } from 'reactflow'
+import type { EdgeProps } from '@xyflow/react'
 
 const StepConfiguration: SmartEdgeOptions = {
 	drawEdge: svgDrawStraightLinePath,
