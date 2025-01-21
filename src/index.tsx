@@ -4,8 +4,7 @@ export * from './SmartEdge'
 export * from './SmartBezierEdge'
 export * from './SmartStepEdge'
 export * from './SmartStraightEdge'
-export * from './getSmartEdge'
-export * from './functions/drawSvgPath'
-export * from './functions/generatePath'
+export { getSmartEdge } from './getSmartEdge'
+export type { GetSmartEdgeOptions } from './getSmartEdge'
 
 export default SmartBezierEdge

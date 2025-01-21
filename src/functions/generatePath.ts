@@ -11,8 +11,8 @@ import {
 	Util,
 	DiagonalMovement
 } from 'pathfinding'
-import type { Grid } from 'pathfinding'
 import type { XYPosition } from '@xyflow/react'
+import type { Grid } from 'pathfinding'
 
 /**
  * Takes source and target {x, y} points, together with an grid representation
