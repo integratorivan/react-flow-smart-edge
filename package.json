@@ -28,7 +28,7 @@
 		"src"
 	],
 	"scripts": {
-		"build": "yarn build-storybook && yarn build-component",
+		"build": "yarn build-component",
 		"build-component": "dts build",
 		"build-storybook": "storybook build",
 		"check-types": "tsc --noEmit",
