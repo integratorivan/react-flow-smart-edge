@@ -21,7 +21,7 @@ export function SmartBezierEdge<
 	const nodes = useNodes<NodeDataType>()
 
 	return (
-		<SmartEdge<EdgeDataType, NodeDataType>
+		<SmartEdge
 			{...props}
 			options={BezierConfiguration}
 			nodes={nodes as Node<NodeDataType>[]}
