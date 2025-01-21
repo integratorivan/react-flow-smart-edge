@@ -20,19 +20,32 @@
 	"license": "MIT",
 	"author": "Tiso Alvarez Puccinelli",
 	"type": "module",
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
-		}
-	},
+	"main": "dist/index.js",
+	"module": "dist/react-flow-smart-edge.esm.js",
+	"typings": "dist/index.d.ts",
 	"files": [
-		"dist"
+		"dist",
+		"src"
 	],
 	"scripts": {
-		"build": "tsup src/index.ts --format esm --dts"
+		"build": "yarn build-component",
+		"build-component": "dts build",
+		"build-storybook": "storybook build",
+		"check-types": "tsc --noEmit",
+		"chromatic": "chromatic --exit-zero-on-changes --project-token f5598c842f1a",
+		"deploy-component": "np --any-branch",
+		"deploy-storybook": "gh-pages -d storybook-static",
+		"install-playwright": "playwright install --with-deps",
+		"lint": "dts lint src",
+		"lint-fix": "dts lint src --fix",
+		"predeploy": "yarn build",
+		"prepare": "dts build",
+		"start": "dts watch",
+		"storybook": "storybook dev -p 6006 --ci",
+		"test": "yarn check-types && yarn lint && yarn test-storybook-ci",
+		"test-storybook": "test-storybook",
+		"test-storybook-ci": "concurrently -k -s first -n 'SB,TEST' -c 'magenta,blue' 'http-server storybook-static --port 6006 --silent' 'wait-on tcp:6006 && yarn test-storybook --maxWorkers=2'",
+		"ui": "yarn upgrade-interactive --latest"
 	},
 	"husky": {
 		"hooks": {
@@ -120,10 +133,5 @@
 		"node": ">=18",
 		"npm": ">=8"
 	},
-	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
-	"publishConfig": {
-		"access": "public",
-		"registry": "https://registry.npmjs.org/",
-		"directory": "dist"
-	}
+	"packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
