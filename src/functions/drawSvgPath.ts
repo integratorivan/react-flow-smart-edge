@@ -8,7 +8,7 @@ import type { XYPosition } from '@xyflow/react'
 export type SVGDrawFunction = (
 	source: XYPosition,
 	target: XYPosition,
-	path: number[][]
+	path: Array<[number, number]>
 ) => string
 
 /**
@@ -39,11 +39,15 @@ export const svgDrawSmoothLinePath: SVGDrawFunction = (
 	target,
 	path
 ) => {
-	const points = [[source.x, source.y], ...path, [target.x, target.y]]
+	const points: Array<[number, number]> = [
+		[source.x, source.y],
+		...path,
+		[target.x, target.y]
+	]
 	return quadraticBezierCurve(points)
 }
 
-const quadraticBezierCurve = (points: number[][]) => {
+const quadraticBezierCurve = (points: Array<[number, number]>) => {
 	const X = 0
 	const Y = 1
 	let point = points[0]
@@ -66,7 +70,12 @@ const quadraticBezierCurve = (points: number[][]) => {
 	return svgPath
 }
 
-const getMidPoint = (Ax: number, Ay: number, Bx: number, By: number) => {
+const getMidPoint = (
+	Ax: number,
+	Ay: number,
+	Bx: number,
+	By: number
+): [number, number] => {
 	const Zx = (Ax - Bx) / 2 + Bx
 	const Zy = (Ay - By) / 2 + By
 	return [Zx, Zy]

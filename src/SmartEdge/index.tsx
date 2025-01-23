@@ -10,14 +10,14 @@ export type SmartEdgeOptions = GetSmartEdgeOptions & {
 	fallback?: React.ComponentType<EdgeProps<Edge>>
 }
 export interface SmartEdgeProps<
-	EdgeDataType extends Edge<any, string | undefined> = Edge
+	EdgeDataType extends Edge<Record<string, unknown>, string | undefined> = Edge
 > extends EdgeProps<EdgeDataType> {
 	nodes: Node[]
 	options: SmartEdgeOptions
 }
 
 export function SmartEdge<
-	EdgeDataType extends Edge<any, string | undefined> = Edge
+	EdgeDataType extends Edge<Record<string, unknown>, string | undefined> = Edge
 >({ nodes, options, ...edgeProps }: SmartEdgeProps<EdgeDataType>) {
 	const {
 		sourceX,
