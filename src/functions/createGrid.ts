@@ -4,7 +4,6 @@ import {
 	getNextPointFromPosition
 } from './guaranteeWalkablePath'
 import { graphToGridPoint } from './pointConversion'
-import { round, roundUp } from './utils'
 import type { NodeBoundingBox, GraphBoundingBox } from './getBoundingBoxes'
 import type { Position } from '@xyflow/react'
 
@@ -19,12 +18,11 @@ export const createGrid = (
 	nodes: NodeBoundingBox[],
 	source: PointInfo,
 	target: PointInfo,
-	gridRatio = 10, // Увеличено для точности
-	bufferZone = 2 // Добавлена буферная зона
+	gridRatio = 10,
+	bufferZone = 2
 ) => {
 	const { xMin, yMin, width, height } = graph
 
-	// 1. Создание сетки с проверкой ошибок
 	const mapColumns = Math.ceil(width / gridRatio) + 1
 	const mapRows = Math.ceil(height / gridRatio) + 1
 
@@ -34,14 +32,12 @@ export const createGrid = (
 
 	const grid = new Grid(mapColumns, mapRows)
 
-	// 2. Функция проверки границ с клэмпингом
 	const safeSetWalkable = (x: number, y: number, walkable: boolean) => {
 		const clampedX = Math.max(0, Math.min(x, mapColumns - 1))
 		const clampedY = Math.max(0, Math.min(y, mapRows - 1))
 		grid.setWalkableAt(clampedX, clampedY, walkable)
 	}
 
-	// 3. Добавление узлов с буферной зоной
 	nodes.forEach((node) => {
 		const nodeStart = graphToGridPoint(node.topLeft, xMin, yMin, gridRatio)
 		const nodeEnd = graphToGridPoint(node.bottomRight, xMin, yMin, gridRatio)
@@ -53,28 +49,31 @@ export const createGrid = (
 		}
 	})
 
-	// 4. Обработка начальной и конечной точек
 	const clampToGrid = (value: number, max: number) =>
-		Math.max(0, Math.min(max - 1, value))
+		Math.max(0, Math.min(max - 1, Math.round(value)))
 
 	const startGrid = {
-		x: clampToGrid(Math.round((source.x - xMin) / gridRatio), mapColumns),
-		y: clampToGrid(Math.round((source.y - yMin) / gridRatio), mapRows)
+		x: clampToGrid((source.x - xMin) / gridRatio, mapColumns),
+		y: clampToGrid((source.y - yMin) / gridRatio, mapRows)
 	}
 
 	const endGrid = {
-		x: clampToGrid(Math.round((target.x - xMin) / gridRatio), mapColumns),
-		y: clampToGrid(Math.round((target.y - yMin) / gridRatio), mapRows)
+		x: clampToGrid((target.x - xMin) / gridRatio, mapColumns),
+		y: clampToGrid((target.y - yMin) / gridRatio, mapRows)
 	}
 
-	// 5. Гарантия проходимости с обработкой null
 	const startingNode = grid.getNodeAt(startGrid.x, startGrid.y)
 	const endingNode = grid.getNodeAt(endGrid.x, endGrid.y)
+
+	// Check if nodes exist before proceeding
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	if (!startingNode || !endingNode) {
+		throw new Error('Start or end node not found in the grid')
+	}
 
 	guaranteeWalkablePath(grid, startingNode, source.position)
 	guaranteeWalkablePath(grid, endingNode, target.position)
 
-	// 6. Получение точек с fallback
 	const start = getNextPointFromPosition(startingNode, source.position)
 	const end = getNextPointFromPosition(endingNode, target.position)
 
