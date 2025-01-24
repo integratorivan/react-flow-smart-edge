@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dfdba9cc-1f1a-4b39-a087-fae18fe77154" name="Changes" comment="" />
+    <list default="true" id="dfdba9cc-1f1a-4b39-a087-fae18fe77154" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,21 +12,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "integratorivan"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;integratorivan&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/integratorivan/react-flow-smart-edge.git",
-    "accountId": "f18eac35-2304-4754-9569-4a8ddeba8249"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/integratorivan/react-flow-smart-edge.git&quot;,
+    &quot;accountId&quot;: &quot;f18eac35-2304-4754-9569-4a8ddeba8249&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2rvpB7nBquIZ5YzVe2H6aSZioN0" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -40,6 +42,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
+    "prettierjs.PrettierConfiguration.Package": "/Users/bustedmedved/Projects/react-flow-smart-edge/node_modules/prettier",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -59,6 +62,8 @@
       <option name="presentableId" value="Default" />
       <updated>1737449264249</updated>
       <workItem from="1737449265354" duration="18000" />
+      <workItem from="1737540567269" duration="44000" />
+      <workItem from="1737626200554" duration="17000" />
     </task>
     <servers />
   </component>
