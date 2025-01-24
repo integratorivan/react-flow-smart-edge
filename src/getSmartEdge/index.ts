@@ -28,13 +28,11 @@ export type GetSmartEdgeOptions = {
 	nodePadding?: number
 	drawEdge?: SVGDrawFunction
 	generatePath?: PathFindingFunction
-	fallbackPath?: (params: EdgeParams) => string
 }
-export type GetSmartEdgeParams<
-	NodeDataType extends Record<string, unknown> = Record<string, unknown>
-> = EdgeParams & {
+
+export type GetSmartEdgeParams = EdgeParams & {
 	options?: GetSmartEdgeOptions
-	nodes: Node<NodeDataType>[]
+	nodes: Node[]
 }
 
 export type GetSmartEdgeReturn = {
@@ -43,9 +41,7 @@ export type GetSmartEdgeReturn = {
 	edgeCenterY: number
 }
 
-export const getSmartEdge = <
-	NodeDataType extends Record<string, unknown> = Record<string, unknown>
->({
+export const getSmartEdge = ({
 	options = {},
 	nodes = [],
 	sourceX,
@@ -54,24 +50,23 @@ export const getSmartEdge = <
 	targetY,
 	sourcePosition,
 	targetPosition
-}: GetSmartEdgeParams<NodeDataType>): GetSmartEdgeReturn | null => {
+}: GetSmartEdgeParams): GetSmartEdgeReturn | null => {
 	try {
 		const {
 			drawEdge = svgDrawSmoothLinePath,
-			generatePath = pathfindingAStarDiagonal,
-			fallbackPath,
-			gridRatio = 10,
-			nodePadding = 15
+			generatePath = pathfindingAStarDiagonal
 		} = options
 
-		// Валидация параметров
-		const validatedGridRatio = Math.max(toInteger(gridRatio), 5)
-		const validatedNodePadding = Math.max(toInteger(nodePadding), 5)
+		let { gridRatio = 10, nodePadding = 10 } = options
+		gridRatio = toInteger(gridRatio)
+		nodePadding = toInteger(nodePadding)
 
-		const { graphBox, nodeBoxes } = getBoundingBoxes<NodeDataType>(
+		// We use the node's information to generate bounding boxes for them
+		// and the graph
+		const { graphBox, nodeBoxes } = getBoundingBoxes(
 			nodes,
-			validatedNodePadding,
-			validatedGridRatio
+			nodePadding,
+			gridRatio
 		)
 
 		const source: PointInfo = {
@@ -86,72 +81,56 @@ export const getSmartEdge = <
 			position: targetPosition
 		}
 
+		// With this information, we can create a 2D grid representation of
+		// our graph, that tells us where in the graph there is a "free" space or not
 		const { grid, start, end } = createGrid(
 			graphBox,
 			nodeBoxes,
 			source,
 			target,
-			validatedGridRatio
+			gridRatio
 		)
 
-		// Поиск пути с обработкой ошибок
+		// We then can use the grid representation to do pathfinding
 		const generatePathResult = generatePath(grid, start, end)
-		if (!generatePathResult?.fullPath.length) {
-			return fallbackPath
-				? {
-						svgPathString: fallbackPath({
-							sourceX,
-							sourceY,
-							targetX,
-							targetY,
-							sourcePosition,
-							targetPosition
-						}),
-						edgeCenterX: (sourceX + targetX) / 2,
-						edgeCenterY: (sourceY + targetY) / 2
-				  }
-				: null
+
+		if (generatePathResult === null) {
+			return null
 		}
 
 		const { fullPath, smoothedPath } = generatePathResult
 
-		// Оптимизация преобразования координат
-		const graphPath = smoothedPath.map(([x, y]) => {
-			const point = gridToGraphPoint(
+		// Here we convert the grid path to a sequence of graph coordinates.
+		const graphPath = smoothedPath.map((gridPoint) => {
+			const [x, y] = gridPoint
+			const graphPoint = gridToGraphPoint(
 				{ x, y },
 				graphBox.xMin,
 				graphBox.yMin,
-				validatedGridRatio
+				gridRatio
 			)
-			return [point.x, point.y]
+			return [graphPoint.x, graphPoint.y]
 		})
 
-		// Генерация SVG пути
-		const svgPathString =
-			drawEdge(source, target, graphPath) ||
-			fallbackPath?.({
-				sourceX,
-				sourceY,
-				targetX,
-				targetY,
-				sourcePosition,
-				targetPosition
-			}) ||
-			`M ${sourceX},${sourceY} L ${targetX},${targetY}`
+		// Finally, we can use the graph path to draw the edge
+		const svgPathString = drawEdge(source, target, graphPath)
 
-		// Расчет центральной точки
-		const midIndex = Math.floor(fullPath.length / 2)
-		const [midX, midY] = fullPath[midIndex] || [0, 0]
+		// Compute the edge's middle point using the full path, so users can use
+		// it to position their custom labels
+		const index = Math.floor(fullPath.length / 2)
+		const middlePoint = fullPath[index]
+		const [middleX, middleY] = middlePoint
 		const { x: edgeCenterX, y: edgeCenterY } = gridToGraphPoint(
-			{ x: midX, y: midY },
+			{ x: middleX, y: middleY },
 			graphBox.xMin,
 			graphBox.yMin,
-			validatedGridRatio
+			gridRatio
 		)
 
 		return { svgPathString, edgeCenterX, edgeCenterY }
-	} catch (error) {
-		console.error('Smart Edge Error:', error)
+	} catch {
 		return null
 	}
 }
+
+export type GetSmartEdgeFunction = typeof getSmartEdge

@@ -2,23 +2,23 @@ import { BezierEdge, BaseEdge } from '@xyflow/react'
 import React from 'react'
 import { getSmartEdge } from '../getSmartEdge'
 import type { GetSmartEdgeOptions } from '../getSmartEdge'
-import type { EdgeProps, Node, Edge } from '@xyflow/react'
+import type { EdgeProps, Node, StepEdge, StraightEdge } from '@xyflow/react'
 
-export type EdgeElement = typeof BezierEdge
+export type EdgeElement =
+	| typeof StraightEdge
+	| typeof BezierEdge
+	| typeof StepEdge
 
 export type SmartEdgeOptions = GetSmartEdgeOptions & {
-	fallback?: React.ComponentType<EdgeProps<Edge>>
+	fallback?: EdgeElement
 }
-export interface SmartEdgeProps<
-	EdgeDataType extends Edge<Record<string, unknown>, string | undefined> = Edge
-> extends EdgeProps<EdgeDataType> {
+
+export interface SmartEdgeProps extends EdgeProps {
 	nodes: Node[]
 	options: SmartEdgeOptions
 }
 
-export function SmartEdge<
-	EdgeDataType extends Edge<Record<string, unknown>, string | undefined> = Edge
->({ nodes, options, ...edgeProps }: SmartEdgeProps<EdgeDataType>) {
+export function SmartEdge({ nodes, options, ...edgeProps }: SmartEdgeProps) {
 	const {
 		sourceX,
 		sourceY,

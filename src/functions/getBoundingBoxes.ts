@@ -1,9 +1,5 @@
 import { roundUp, roundDown } from './utils'
-import type { Node as BaseNode, XYPosition } from '@xyflow/react'
-
-export type Node<T extends Record<string, unknown>> = BaseNode<T> & {
-	positionAbsolute?: { x: number; y: number }
-}
+import type { Node, XYPosition } from '@xyflow/react'
 
 export type NodeBoundingBox = {
 	id: string
@@ -37,8 +33,8 @@ export type GraphBoundingBox = {
  * @param roundTo Everything will be rounded to this nearest integer
  * @returns Graph and nodes bounding boxes.
  */
-export const getBoundingBoxes = <NodeDataType extends Record<string, unknown>>(
-	nodes: Node<NodeDataType>[],
+export const getBoundingBoxes = (
+	nodes: Node[],
 	nodePadding = 2,
 	roundTo = 2
 ) => {
@@ -48,12 +44,11 @@ export const getBoundingBoxes = <NodeDataType extends Record<string, unknown>>(
 	let yMin = Number.MAX_SAFE_INTEGER
 
 	const nodeBoxes: NodeBoundingBox[] = nodes.map((node) => {
-		const width = Math.max(node.width || 0, 1)
-		const height = Math.max(node.height || 0, 1)
-
+		const width = Math.max(node.measured?.width || 0, 1)
+		const height = Math.max(node.measured?.height || 0, 1)
 		const position: XYPosition = {
-			x: node.positionAbsolute?.x || 0,
-			y: node.positionAbsolute?.y || 0
+			x: node.position.x || 0,
+			y: node.position.y || 0
 		}
 
 		const topLeft: XYPosition = {

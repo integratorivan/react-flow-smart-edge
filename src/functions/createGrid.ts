@@ -4,6 +4,7 @@ import {
 	getNextPointFromPosition
 } from './guaranteeWalkablePath'
 import { graphToGridPoint } from './pointConversion'
+import { round, roundUp } from './utils'
 import type { NodeBoundingBox, GraphBoundingBox } from './getBoundingBoxes'
 import type { Position } from '@xyflow/react'
 
@@ -18,68 +19,61 @@ export const createGrid = (
 	nodes: NodeBoundingBox[],
 	source: PointInfo,
 	target: PointInfo,
-	gridRatio = 10,
-	bufferZone = 2
+	gridRatio = 2
 ) => {
 	const { xMin, yMin, width, height } = graph
 
-	const mapColumns = Math.ceil(width / gridRatio) + 1
-	const mapRows = Math.ceil(height / gridRatio) + 1
-
-	if (mapColumns <= 0 || mapRows <= 0) {
-		throw new Error('Invalid grid dimensions')
-	}
-
+	// Create a grid representation of the graph box, where each cell is
+	// equivalent to 10x10 pixels (or the grid ratio) on the graph. We'll use
+	// this simplified grid to do pathfinding.
+	const mapColumns = roundUp(width, gridRatio) / gridRatio + 1
+	const mapRows = roundUp(height, gridRatio) / gridRatio + 1
 	const grid = new Grid(mapColumns, mapRows)
 
-	const safeSetWalkable = (x: number, y: number, walkable: boolean) => {
-		const clampedX = Math.max(0, Math.min(x, mapColumns - 1))
-		const clampedY = Math.max(0, Math.min(y, mapRows - 1))
-		grid.setWalkableAt(clampedX, clampedY, walkable)
-	}
-
+	// Update the grid representation with the space the nodes take up
 	nodes.forEach((node) => {
 		const nodeStart = graphToGridPoint(node.topLeft, xMin, yMin, gridRatio)
 		const nodeEnd = graphToGridPoint(node.bottomRight, xMin, yMin, gridRatio)
 
-		for (let x = nodeStart.x - bufferZone; x <= nodeEnd.x + bufferZone; x++) {
-			for (let y = nodeStart.y - bufferZone; y <= nodeEnd.y + bufferZone; y++) {
-				safeSetWalkable(x, y, false)
+		for (let x = nodeStart.x; x < nodeEnd.x; x++) {
+			for (let y = nodeStart.y; y < nodeEnd.y; y++) {
+				grid.setWalkableAt(x, y, false)
 			}
 		}
 	})
 
-	const clampToGrid = (value: number, max: number) =>
-		Math.max(0, Math.min(max - 1, Math.round(value)))
+	// Convert the starting and ending graph points to grid points
+	const startGrid = graphToGridPoint(
+		{
+			x: round(source.x, gridRatio),
+			y: round(source.y, gridRatio)
+		},
+		xMin,
+		yMin,
+		gridRatio
+	)
 
-	const startGrid = {
-		x: clampToGrid((source.x - xMin) / gridRatio, mapColumns),
-		y: clampToGrid((source.y - yMin) / gridRatio, mapRows)
-	}
+	const endGrid = graphToGridPoint(
+		{
+			x: round(target.x, gridRatio),
+			y: round(target.y, gridRatio)
+		},
+		xMin,
+		yMin,
+		gridRatio
+	)
 
-	const endGrid = {
-		x: clampToGrid((target.x - xMin) / gridRatio, mapColumns),
-		y: clampToGrid((target.y - yMin) / gridRatio, mapRows)
-	}
-
+	// Guarantee a walkable path between the start and end points, even if the
+	// source or target where covered by another node or by padding
 	const startingNode = grid.getNodeAt(startGrid.x, startGrid.y)
-	const endingNode = grid.getNodeAt(endGrid.x, endGrid.y)
-
-	// Check if nodes exist before proceeding
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	if (!startingNode || !endingNode) {
-		throw new Error('Start or end node not found in the grid')
-	}
-
 	guaranteeWalkablePath(grid, startingNode, source.position)
+	const endingNode = grid.getNodeAt(endGrid.x, endGrid.y)
 	guaranteeWalkablePath(grid, endingNode, target.position)
 
+	// Use the next closest points as the start and end points, so
+	// pathfinding does not start too close to the nodes
 	const start = getNextPointFromPosition(startingNode, source.position)
 	const end = getNextPointFromPosition(endingNode, target.position)
 
-	return {
-		grid,
-		start: { x: start.x, y: start.y },
-		end: { x: end.x, y: end.y }
-	}
+	return { grid, start, end }
 }

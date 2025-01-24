@@ -25,8 +25,8 @@ export type PathFindingFunction = (
 	start: XYPosition,
 	end: XYPosition
 ) => {
-	fullPath: Array<[number, number]>
-	smoothedPath: Array<[number, number]>
+	fullPath: number[][]
+	smoothedPath: number[][]
 } | null
 
 export const pathfindingAStarDiagonal: PathFindingFunction = (
@@ -38,16 +38,8 @@ export const pathfindingAStarDiagonal: PathFindingFunction = (
 		const finder = new AStarFinder({
 			diagonalMovement: DiagonalMovement.Always
 		})
-		const fullPath = finder.findPath(
-			start.x,
-			start.y,
-			end.x,
-			end.y,
-			grid
-		) as Array<[number, number]>
-		const smoothedPath = Util.smoothenPath(grid, fullPath) as Array<
-			[number, number]
-		>
+		const fullPath = finder.findPath(start.x, start.y, end.x, end.y, grid)
+		const smoothedPath = Util.smoothenPath(grid, fullPath)
 		if (fullPath.length === 0 || smoothedPath.length === 0) return null
 		return { fullPath, smoothedPath }
 	} catch {
@@ -64,16 +56,8 @@ export const pathfindingAStarNoDiagonal: PathFindingFunction = (
 		const finder = new AStarFinder({
 			diagonalMovement: DiagonalMovement.Never
 		})
-		const fullPath = finder.findPath(
-			start.x,
-			start.y,
-			end.x,
-			end.y,
-			grid
-		) as Array<[number, number]>
-		const smoothedPath = Util.smoothenPath(grid, fullPath) as Array<
-			[number, number]
-		>
+		const fullPath = finder.findPath(start.x, start.y, end.x, end.y, grid)
+		const smoothedPath = Util.smoothenPath(grid, fullPath)
 		if (fullPath.length === 0 || smoothedPath.length === 0) return null
 		return { fullPath, smoothedPath }
 	} catch {
@@ -87,17 +71,12 @@ export const pathfindingJumpPointNoDiagonal: PathFindingFunction = (
 	end
 ) => {
 	try {
+		// FIXME: The "pathfinding" module doe not have proper typings.
 		// @ts-ignore
 		const finder = new JumpPointFinder({
 			diagonalMovement: DiagonalMovement.Never
 		})
-		const fullPath = finder.findPath(
-			start.x,
-			start.y,
-			end.x,
-			end.y,
-			grid
-		) as Array<[number, number]>
+		const fullPath = finder.findPath(start.x, start.y, end.x, end.y, grid)
 		const smoothedPath = fullPath
 		if (fullPath.length === 0 || smoothedPath.length === 0) return null
 		return { fullPath, smoothedPath }

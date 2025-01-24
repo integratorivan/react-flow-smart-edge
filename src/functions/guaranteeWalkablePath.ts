@@ -1,5 +1,5 @@
-import type { Grid } from 'pathfinding'
 import type { Position, XYPosition } from '@xyflow/react'
+import type { Grid } from 'pathfinding'
 
 type Direction = 'top' | 'bottom' | 'left' | 'right'
 
@@ -26,9 +26,12 @@ export const getNextPointFromPosition = (
  */
 export const guaranteeWalkablePath = (
 	grid: Grid,
-	point: XYPosition,
+	point: XYPosition | null,
 	position: Position
 ) => {
+	if (!point) {
+		return
+	}
 	let node = grid.getNodeAt(point.x, point.y)
 	while (!node.walkable) {
 		grid.setWalkableAt(node.x, node.y, true)
