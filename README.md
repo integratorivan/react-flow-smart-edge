@@ -1,4 +1,4 @@
-# React Flow Smart Edge xyflow/react 🇷🇺
+# React Flow Smart Edge @xyflow/react 🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺🇷🇺
 
 > Это форк оригинальной библиотеки [react-flow-smart-edge](https://github.com/tisoap/react-flow-smart-edge), обновленный для работы с @xyflow/react (ранее reactflow).
 
@@ -6,6 +6,8 @@
 
 - Обновлена поддержка с reactflow v11 до @xyflow/react
 - Сохранена полная обратная совместимость API
+
+---
 
 Custom Edges for React Flow that never intersect with other nodes, using pathfinding.
 
